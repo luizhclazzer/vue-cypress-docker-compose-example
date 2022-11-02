@@ -1,0 +1,25 @@
+version: "3"
+services:
+  client:
+    build: client/
+    ports:
+      - 8081:8080
+
+  # Cypress container
+  cypress:
+    # the Docker image to use from https://github.z/cypress-io/cypress-docker-images
+    image: "cypress/included:10.3.0"
+    depends_on:
+      - client
+    environment:
+      # pass base url to test pointing at the web application
+      - CYPRESS_baseUrl=http://client:8080
+      # - CYPRESS_baseUrl=http://localhost:8080/
+    # share the current folder as volume to avoid copying
+    working_dir: /e2e
+    volumes:
+      - ./client:/e2e
+
+# networks:
+#   app-connect:
+#       driver: bridge
